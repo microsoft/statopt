@@ -98,7 +98,7 @@ class SALSA(SASA, SSLS):
                 is_decreasing = self.state['ls_bucket'].linregress(self.state['significance'])[0]
                 if not is_decreasing:
                     self.state['switched'] = True
-                    print("Switch due to non-descreasing training loss!")
+                    print("SALSA: auto switch due to non-descreasing training loss.")
 
         self.qhm_update()
 
@@ -106,7 +106,7 @@ class SALSA(SASA, SSLS):
         self.stats_adaptation()
         if self.state['stats_test'] and self.state['stats_stationary']:
             self.state['switched'] = True
-            print("Switch due to stationary test!")
+            print("SALSA: auto switch due to stationarityy test")
 
 
     def step_mannual_switch(self, closure):

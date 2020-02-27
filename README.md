@@ -9,9 +9,12 @@ Companion paper: [Statistical Adaptive Stochastic Gradient Methods](https://www.
 
 ## Install
 
-Clone or fork from GitHub. Or install the Python package distribution:
+    pip install statopt
+
+Or from Github:
 
     pip install git+git://github.com/microsoft/statopt.git#egg=statopt
+
 
 ## Usage of SALSA and SASA
 
@@ -23,8 +26,7 @@ Complete Python code is given in [examples/cifar_example.py](examples/cifar_exam
 First, choose a batch size and prepare the dataset and data loader as in [this PyTorch tutorial](https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html):
 
 ```python
-import torch
-import torchvision
+import torch, torchvision
 
 batch_size = 128
 trainset = torchvision.datasets.CIFAR10(root='../data', train=True, ...)

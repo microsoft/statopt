@@ -11,7 +11,7 @@ Companion paper: [Statistical Adaptive Stochastic Gradient Methods](https://www.
 
 Clone or fork from GitHub. Or install the Python package distribution:
 
-    sudo pip install git+git://github.com/microsoft/statopt.git#egg=statopt
+    pip install git+git://github.com/microsoft/statopt.git#egg=statopt
 
 ## Usage of SALSA and SASA
 

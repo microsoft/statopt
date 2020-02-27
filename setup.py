@@ -8,5 +8,7 @@ setup(
     description='Statistical adaptive stochastic optimization methods',
     long_description=open('README.md').read(),
     install_requires=['numpy','scipy','torch'],
-    url='https://github.com/microsoft/statopt'
+    url='https://github.com/microsoft/statopt',
+    author='Lin Xiao',
+    author_email='lin.xiao@gmail.com'
 )

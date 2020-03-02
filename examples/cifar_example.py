@@ -5,6 +5,11 @@ import math
 import torch
 import torchvision
 import statopt  
+import argparse
+
+parser = argparse.ArgumentParser(description='PyTorch Cifar10 Training')
+parser.add_argument('--opt', choices=['sgd', 'sasa', 'salsa'], default='sgd')
+args = parser.parse_args()
 
 #----------------------------------------------------
 # Prepare datasets, download to the directory ../data 
@@ -38,7 +43,8 @@ loss_func = torch.nn.CrossEntropyLoss()
 
 #--------------------------------------------------------
 # Choose optimizer from the list ['sgd', 'sasa', 'salsa']
-optimizer_name = 'salsa'
+optimizer_name = args.opt
+print('Using optimier {}'.format(optimizer_name))
 
 if optimizer_name == 'sasa':
     testfreq = min(1000, len(trainloader))
@@ -53,9 +59,9 @@ elif optimizer_name == 'salsa':
                               gamma=gamma, testfreq=testfreq)
 else:
     optimizer_name = 'sgd'  # SGD with a Step learning rate scheduler
-    optimizer = torch.optim.SGD(net.parameters(), lr=1.0,
+    optimizer = torch.optim.SGD(net.parameters(), lr=0.1,
                                 momentum=0.9, weight_decay=5e-4)
-    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=50,
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=50*len(trainloader),
                                                 gamma=0.1, last_epoch=-1)
 
 #----------------------------------

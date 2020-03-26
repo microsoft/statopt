@@ -9,6 +9,7 @@ import argparse
 
 parser = argparse.ArgumentParser(description='PyTorch Cifar10 Training')
 parser.add_argument('--opt', choices=['sgd', 'sasa', 'salsa'], default='sgd')
+parser.add_argument('--cifarify', type=int, default=0)
 args = parser.parse_args()
 
 #----------------------------------------------------
@@ -38,7 +39,20 @@ testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size,
 #-----------------------------------------------
 # Choose device, network model and loss function
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-net = torchvision.models.resnet18().to(device)
+net = torchvision.models.resnet18(num_classes=10)
+
+if args.cifarify:
+    class Identity(torch.nn.Module):
+        def __init__(self):
+            super(Identity, self).__init__()
+
+        def forward(self, x):
+            return x
+
+    net.conv1 = torch.nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1)
+    net.maxpool = Identity()
+
+net = net.to(device)
 loss_func = torch.nn.CrossEntropyLoss()
 
 #--------------------------------------------------------
@@ -68,7 +82,7 @@ else:
 # Training the neural network model
 print('Start training ...')
 
-for epoch in range(150):
+for epoch in range(250):
     # Reset accumulative running loss at beginning or each epoch
     running_loss = 0.0
 
@@ -112,6 +126,7 @@ print('Finished training.')
 n_correct = 0
 n_testset = 0
 with torch.no_grad():
+    net.eval()
     for (images, labels) in testloader:
         images, labels = images.to(device), labels.to(device)
         outputs = net(images)

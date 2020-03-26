@@ -38,19 +38,12 @@ class LeakyBucket(object):
         self.total_count = 0
 
     def double_size(self):
-        newbuffer = torch.zeros(self.size * 2, dtype=self.buffer.dtype, device=self.buffer.device)
-        newbuffer[0:self.size][:] = self.buffer
-        self.buffer = newbuffer
         self.size *= 2
+        self.buffer.resize_(self.size)
 
     def add(self, val):
         if self.end == self.size:               # when the end index reach size
-            if self.start < self.ratio:             # if the start index is small
-                self.double_size()                      # double the size of buffer
-            else:                                   # otherwise shift the queue
-                self.buffer[0:self.count] = self.buffer[self.start:self.end] 
-                self.start = 0                          # reset start index to 0
-                self.end = self.count                   # reset end index to count
+            self.double_size()                      # double the size of buffer
 
         self.buffer[self.end] = val             # always put new value at the end
         self.end += 1                           # and increase end index by one
@@ -67,6 +60,12 @@ class LeakyBucket(object):
                 self.start += 1                         # increase start index by one
 
         self.total_count += 1                   # always increase total_count by one
+
+        # reset start index to 0 and end index to count to save space
+        if self.start >= self.count:
+            self.buffer[0:self.count] = self.buffer[self.start:self.end]
+            self.start = 0
+            self.end = self.count
 
     # ! Need to add safeguard to allow compute only if there are enough entries
     def mean_std(self, mode='bm'):
